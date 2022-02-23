@@ -1,8 +1,10 @@
 use schemars::JsonSchema;
+use cosmwasm_std::Addr;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
+    pub receiver_address: Addr,
     pub count: i32,
 }
 

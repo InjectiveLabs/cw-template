@@ -20,6 +20,7 @@ pub fn instantiate(
 ) -> Result<Response, ContractError> {
     let state = State {
         count: msg.count,
+        receiver_address: msg.receiver_address.clone(),
         owner: info.sender.clone(),
     };
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
@@ -28,7 +29,9 @@ pub fn instantiate(
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
+        .add_attribute("receiver_address", msg.receiver_address))
         .add_attribute("count", msg.count.to_string()))
+        
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
