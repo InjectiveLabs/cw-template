@@ -29,7 +29,7 @@ pub fn instantiate(
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
-        .add_attribute("receiver_address", msg.receiver_address))
+        .add_attribute("receiver_address", msg.receiver_address)
         .add_attribute("count", msg.count.to_string()))
         
 }
