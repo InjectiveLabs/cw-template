@@ -39,9 +39,19 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
+        ExecuteMsg::BeginBlocker {} => begin_blocker(deps),
         ExecuteMsg::Increment {} => try_increment(deps),
         ExecuteMsg::Reset { count } => try_reset(deps, info, count),
     }
+}
+
+pub fn begin_blocker(deps: DepsMut) -> Result<Response, ContractError> {
+    STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
+        state.count += 1;
+        Ok(state)
+    })?;
+
+    Ok(Response::new().add_attribute("method", "begin_blocker"))
 }
 
 pub fn try_increment(deps: DepsMut) -> Result<Response, ContractError> {

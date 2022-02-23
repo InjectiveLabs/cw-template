@@ -10,6 +10,7 @@ pub struct InstantiateMsg {
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
     Increment {},
+    BeginBlocker {},
     Reset { count: i32 },
 }
 
