@@ -1,6 +1,6 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, BankMsg, coins};
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
@@ -46,12 +46,17 @@ pub fn execute(
 }
 
 pub fn begin_blocker(deps: DepsMut) -> Result<Response, ContractError> {
-    STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
-        state.count += 1;
-        Ok(state)
-    })?;
+    // 1. Query the state of native modules   
 
-    Ok(Response::new().add_attribute("method", "begin_blocker"))
+    // 2. Create and submit BankTransfer sub message
+    let state = STATE.load(deps.storage)?;
+    let bank_transfer = BankMsg::Send {        
+        to_address: state.receiver_address.to_string(),
+        amount: coins(2, "inj".to_string()),
+    };
+
+    let res = Response::new().add_message(bank_transfer);
+    Ok(res)
 }
 
 pub fn try_increment(deps: DepsMut) -> Result<Response, ContractError> {
